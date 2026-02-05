@@ -1,0 +1,77 @@
+.banks {
+    display: flex;
+    height: 46px;
+    white-space: nowrap;
+    margin-left: -1px;
+    margin-bottom: -1px;
+}
+
+.banks img {
+    -webkit-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+    -webkit-touch-callout: none;
+}
+
+.logo {
+    position: relative;
+    flex-shrink: 0;
+    inline-size: 44px;
+    block-size: 44px;
+    overflow: hidden;
+    white-space: nowrap;
+    border-radius: 50%;
+    border: none;
+    background: var(--color-background-neutral);
+    vertical-align: middle;
+    appearance: none;
+    margin: 0;
+    box-sizing: border-box;
+
+    &+.logo {
+        margin-left: -11px;
+    }
+
+    img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        inline-size: 100%;
+        block-size: 100%;
+        object-fit: cover;
+        box-sizing: border-box;
+        border-radius: inherit;
+        border-radius: 50% !important;
+        padding: 3px;
+        object-fit: contain;
+    }
+}
+
+.badgeWrap {
+    display: flex;
+    padding: 3px;
+    margin-left: -9px;
+}
+
+.badge {
+    position: relative;
+    align-items: center;
+    background: var(--color-background-neutral-2);
+    flex-shrink: 0;
+    inline-size: 38px;
+    block-size: 38px;
+    border-radius: 100px;
+    box-sizing: border-box;
+    color: var(--text-color-primary);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 18px;
+    letter-spacing: -0.4px;
+    display: inline-flex;
+    justify-content: center;
+    min-height: 38px;
+    -webkit-user-select: none;
+    padding-right: 2px;
+    user-select: none;
+}

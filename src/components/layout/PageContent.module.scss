@@ -1,0 +1,21 @@
+.pageContent {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    flex-shrink: 3;
+    height: 100%;
+    padding-left: var(--gap-16);
+    padding-right: var(--gap-16);
+}
+
+.pageContent {
+    width: 418px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (max-width: 800px) {
+    .pageContent {
+        width: 100%;
+    }
+}

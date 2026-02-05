@@ -1,0 +1,35 @@
+.header {
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: -0.28px;
+    margin-bottom: 12px;
+}
+
+.paymentAmount {
+    font-size: 35px;
+    line-height: 38px;
+    letter-spacing: -0.28px;
+}
+
+.orderAmount {
+    color: var(--text-secondary-color);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: -0.28px;
+    margin-top: 4px;
+}
+
+.bold {
+    font-weight: 700;
+}
+
+.regualar {
+    font-weight: 400;
+}

@@ -1,0 +1,78 @@
+// :root {
+//     --amount-input-minor-part-and-currency-color: var(--color-light-text-secondary);
+//     --amount-input-disabled: var(--color-light-text-tertiary);
+// }
+
+.minorPartAndCurrency {
+    color: var(--text-secondary-color);
+
+    &.disabled,
+    &.readOnly {
+        // color: var(--amount-input-disabled);
+    }
+}
+
+
+/*
+* Задача:
+* 1) Отобразить символ валюты сразу за последним введенным символом
+* 2) Не дать возможность попасть кареткой за валюту
+* 3) Не дать выделить символ валюты при выделении денежного значения
+* 4) Отображать символ валюты другим цветом
+* 5) Отображать копейки другим цветом
+*
+* Решение
+* Делаем скрытый текст где держим то же значение, добавляем символ валюты
+* Важно расположить этот текст ровно на месте инпута и чтобы он имел те же параметры что и текст в инпуте
+*/
+
+.container {
+    position: relative;
+}
+
+.bold .input,
+.bold .suffixContainer {
+    font-weight: bold;
+}
+
+/* суффикс = текст в поле. Скрываем спейсер, чтобы суффикс выглядел как введенное в поле значение */
+.suffixContainer>*:first-child {
+    display: none;
+}
+
+.filled .input,
+.input:focus {
+    -webkit-text-fill-color: transparent;
+}
+
+/*
+* Когда пользователь выделяет текст, показываем реальный текст инпута
+* и скрываем визуальный суффикс, чтобы избежать артефактов рендеринга (Windows).
+*/
+.focused .input {
+    -webkit-text-fill-color: currentColor;
+}
+
+.focused .suffixMajor,
+.focused .suffixMinor {
+    opacity: 0;
+}
+
+.input {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 24px;
+
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:active {
+        &:first-line {
+            font-size: 20px;
+            font-weight: 400;
+            line-height: 24px;
+            letter-spacing: -0.28px;
+            font-family: var(--font-family);
+        }
+    }
+}

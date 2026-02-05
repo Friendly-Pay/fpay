@@ -1,0 +1,156 @@
+@import '../assets/css/fonts.css';
+
+:root {
+    --safe-area-top: env(safe-area-inset-top, 0px);
+    --safe-area-right: env(safe-area-inset-right, 0px);
+    --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-area-left: env(safe-area-inset-left, 0px);
+}
+
+:root {
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui,
+        'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif
+}
+
+:root {
+    --gap-0: 0px;
+    --gap-16: 16px;
+
+    --radius: 18px;
+
+    --color-primary: #175AEA;
+    --color-primary-2: #3173FF;
+    --color-header: rgba(7, 7, 7, 0.87);
+
+    --color-background-neutral: #1B1B1D;
+    --color-background-neutral-2: #333333;
+
+    --color-button-primary: #175AEA;
+    --color-button-primary-typo: #FFFFFF;
+    /* --color-button-primary-disabled: #F2F3F5;
+    --color-button-primary-typo-disabled: #BABABA; */
+
+    --text-primary-color: #F6F7F8;
+    --text-secondary-color: #9099A3;
+    --text-secondary-color-2: rgba(246, 247, 248, 0.65);
+    --text-secondary-color-3: rgba(242, 246, 250, 0.70);
+    --text-positive-color: #00B92D;
+    --text-negative-color: #FF4D4D;
+    --text-primary-color-inverse: #070707;
+
+    --link-primary-color: #3173FF;
+
+    --status-neutral-color: #D9DBE8;
+    --status-positive-color: #00B92D;
+    --status-negative-color: #FF4D4D;
+
+}
+
+.zero-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+*,
+:after,
+:before {
+    box-sizing: border-box;
+}
+
+ul,
+ol {
+    list-style: none;
+    padding: 0;
+    margin: 0
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0
+}
+
+input,
+button,
+select,
+textarea {
+    font-family: inherit;
+    color: inherit
+}
+
+hr {
+    margin: 0;
+    block-size: 1px;
+    border: none;
+    background: var(--tui-border-normal)
+}
+
+iframe {
+    border: none
+}
+
+svg use {
+    pointer-events: none
+}
+
+::selection {
+    background-color: var(--tui-service-selection-background)
+}
+
+::-ms-clear {
+    display: none
+}
+
+::-ms-reveal {
+    display: none
+}
+
+@supports (-webkit-hyphens: none) and (text-align-last: right) {
+    :after {
+        content: none
+    }
+}
+
+html {
+    block-size: 100%;
+    font-size: 16px;
+    height: 100%;
+    -webkit-overflow-scrolling: touch;
+}
+
+html,
+body {
+    -webkit-overflow-scrolling: touch;
+}
+
+html {
+    color-scheme: dark;
+}
+
+body,
+input {
+    margin: 0;
+}
+
+body {
+    background-color: #070707;
+    font-family: var(--font-family);
+    block-size: 100%;
+    min-block-size: 100%;
+    overflow-x: hidden;
+    min-width: 320px;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    min-height: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+    display: flex;
+}
+
+/* .mobile * {
+    touch-action: manipulation;
+} */

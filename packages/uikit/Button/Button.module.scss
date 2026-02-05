@@ -1,0 +1,128 @@
+.button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-family);
+    touch-action: manipulation;
+    text-align: center;
+    user-zoom: none;
+    -webkit-text-size-adjust: 100%;
+    appearance: none;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    line-height: inherit;
+    text-decoration: none;
+    position: relative;
+    align-items: center;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    white-space: nowrap;
+    overflow: hidden;
+    vertical-align: middle;
+    max-inline-size: 100%;
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: pointer;
+}
+
+.button {
+    &.big {
+        height: 58px;
+        padding: 0 16px;
+        font-size: 19px;
+        letter-spacing: -0.28px;
+        font-weight: 500;
+        border-radius: 18px;
+    }
+
+    &.medium {
+        height: 52px;
+        padding: 0 16px;
+        font-size: 16px;
+        letter-spacing: -0.16px;
+        font-weight: 500;
+        border-radius: 14px;
+    }
+
+    &.normal {
+        height: 56px;
+        padding: 0 16px;
+        font-size: 16px;
+        letter-spacing: -0.28px;
+        font-weight: 500;
+        border-radius: 16px;
+    }
+
+    &.small {
+        height: 42px;
+        padding: 0 16px;
+        font-size: 14px;
+        line-height: 20px;
+        letter-spacing: -0.2px;
+        font-weight: 400;
+        border-radius: 10px;
+    }
+}
+
+.primary {
+    color: var(--color-button-primary-typo);
+    background-color: var(--color-button-primary);
+
+    &.disabled {
+        color: var(--color-button-primary-typo-disabled);
+        background-color: var(--color-button-primary-disabled);
+    }
+}
+
+.secondary {
+    color: var(--color-typo-primary);
+    background-color: var(--color-fill-5);
+
+    &.disabled {
+        opacity: 0.5;
+    }
+}
+
+.secondaryColored {
+    color: var(--color-primary);
+    background-color: var(--color-primary-10);
+
+    &.disabled {
+        opacity: 0.5;
+    }
+}
+
+.white {
+    color: var(--color-typo-primary);
+    background-color: var(--color-white);
+
+    &.disabled {
+        opacity: 0.5;
+    }
+}
+
+.transparent {
+    color: var(--color-primary);
+    background-color: transparent;
+
+    &.disabled {
+        opacity: 0.5;
+    }
+}
+
+.button[disabled] {
+    cursor: var(--disabled-cursor);
+
+    & * {
+        pointer-events: none;
+    }
+}
+
+@media screen and (max-height: 700px) {
+    .button {
+        height: 52px;
+    }
+}

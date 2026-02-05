@@ -1,0 +1,31 @@
+.icon {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    vertical-align: top;
+}
+
+.background {
+    border-radius: 50%;
+    height: 100%;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+}
+
+.svg {
+    display: inline-flex;
+    justify-content: center;
+    max-height: 100%;
+    max-width: 100%;
+    position: relative;
+
+    svg {
+        align-self: center;
+        height: 100%;
+        width: 100%;
+    }
+}

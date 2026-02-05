@@ -1,0 +1,245 @@
+html {
+  background-color: #070707;
+  height: 100%;
+  font-size: 16px;
+  -webkit-overflow-scrolling: touch;
+}
+
+body {
+  overflow-x: hidden;
+  min-width: 320px;
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  min-height: 100%;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-overflow-scrolling: touch;
+}
+
+.skeleton {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  height: 100%;
+  background-color: #070707;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.skeleton__container {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  padding-left: 16px;
+  padding-right: 16px;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.skeleton__content {
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.skeleton__header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  height: 44px;
+}
+
+.skeleton__header .skeleton-item {
+  width: 100%;
+  height: 32px;
+}
+
+@-webkit-keyframes skeletonVibe {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0.5;
+  }
+}
+
+@keyframes skeletonVibe {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0.5;
+  }
+}
+
+.skeleton-item {
+  position: relative;
+  color: transparent !important;
+  background: transparent !important;
+  pointer-events: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.skeleton-item::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-animation: skeletonVibe ease-in-out 1s infinite alternate;
+  animation: skeletonVibe ease-in-out 1s infinite alternate;
+  background-color: #161616;
+  border-radius: 8px;
+}
+
+.skeleton-payment {
+  margin-top: 34px;
+  margin-bottom: 147px;
+}
+
+.skeleton-payment__title {
+  width: 37vw;
+  height: 22px;
+  margin-bottom: 18px;
+}
+
+.skeleton-payment__amount {
+  width: 47vw;
+  height: 27px;
+  margin-bottom: 14px;
+}
+
+.skeleton-payment__label {
+  width: 21vw;
+  height: 14px;
+}
+
+.skeleton-cards {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr 10px 1fr;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  -ms-grid-rows: 141px 10px 141px;
+  grid-template-rows: 141px 141px;
+}
+
+.skeleton-cards>*:nth-child(1) {
+  -ms-grid-row: 1;
+  -ms-grid-column: 1;
+}
+
+.skeleton-cards>*:nth-child(2) {
+  -ms-grid-row: 1;
+  -ms-grid-column: 3;
+}
+
+.skeleton-cards>*:nth-child(3) {
+  -ms-grid-row: 3;
+  -ms-grid-column: 1;
+}
+
+.skeleton-cards>*:nth-child(4) {
+  -ms-grid-row: 3;
+  -ms-grid-column: 3;
+}
+
+.skeleton-cards__bank {
+  -ms-grid-column: 1;
+  -ms-grid-column-span: 1;
+  grid-column: 1/2;
+  -ms-grid-row: 1;
+  -ms-grid-row-span: 1;
+  grid-row: 1/2;
+  height: 141px;
+}
+
+.skeleton-cards__share {
+  -ms-grid-column: 1;
+  -ms-grid-column-span: 1;
+  grid-column: 1/2;
+  -ms-grid-row: 2;
+  -ms-grid-row-span: 1;
+  grid-row: 2/3;
+  height: 141px;
+}
+
+.skeleton-cards__qr {
+  -ms-grid-column: 2;
+  -ms-grid-column-span: 1;
+  grid-column: 2/3;
+  -ms-grid-row: 1;
+  -ms-grid-row-span: 2;
+  grid-row: 1/span 2;
+  height: 292px;
+}
+
+.skeleton-cards>.skeleton-item::after {
+  border-radius: 18px;
+}
+
+.skeleton-shop {
+  margin-top: 16px;
+}
+
+.skeleton-shop__head {
+  width: 100%;
+  height: 76px;
+  margin-bottom: 37px;
+}
+
+.skeleton-shop__head::after {
+  border-radius: 18px;
+}
+
+.skeleton-shop__title {
+  width: 43vw;
+  height: 24px;
+  margin-bottom: 15px;
+}
+
+.skeleton-shop__input {
+  width: 100%;
+  height: 57px;
+  margin-bottom: 18px;
+}
+
+.skeleton-shop__input::after {
+  border-radius: 17px;
+}
+
+.skeleton-shop__currency {
+  width: 118px;
+  height: 118px;
+  margin-bottom: 32px;
+}
+
+.skeleton-shop__currency::after {
+  border-radius: 18px;
+}
+
+.skeleton-shop__button {
+  width: 100%;
+  height: 58px;
+}
+
+.skeleton-shop__button::after {
+  border-radius: 17px;
+}

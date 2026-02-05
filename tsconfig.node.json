@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "composite": true,
+        "skipLibCheck": true,
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "allowSyntheticDefaultImports": true,
+        "strict": true
+    },
+    "include": [
+        "vite.inline-script.plugin.ts",
+        "vite.minify.plugin.ts",
+        "vite.s3.plugin.ts",
+        "vite.config.ts"
+    ]
+}

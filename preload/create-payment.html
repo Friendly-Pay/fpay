@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Friendly Pay | Checkout Page</title>
+    <base href="/%VITE_APP_VERSION%/" />
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+        name="viewport" />
+    <link rel="preconnect" href="%VITE_CDN_DOMAIN%" />
+    <link crossorigin="anonymous" rel="preconnect" href="%VITE_CDN_DOMAIN%">
+    <link id="favicon-node" href="%VITE_CDN_BASE_URL%/favicon.png" rel="icon" type="image/png" />
+    <link rel="preload" href="%VITE_CDN_BASE_URL%/css/skeleton.css" as="style" />
+    <link rel="stylesheet" href="%VITE_CDN_BASE_URL%/css/skeleton.css" />
+</head>
+
+<body>
+    <div id="initial-skeleton" class="skeleton">
+        <div class="skeleton__container skeleton__header">
+            <div class="skeleton-item"></div>
+        </div>
+
+        <div class="skeleton__container">
+            <div class="skeleton__content">
+                <div class="skeleton-shop">
+                    <div class="skeleton-item skeleton-shop__head"></div>
+                    <div class="skeleton-item skeleton-shop__title"></div>
+                    <div class="skeleton-item skeleton-shop__input"></div>
+                    <div class="skeleton-item skeleton-shop__currency"></div>
+                    <div class="skeleton-item skeleton-shop__button"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script data-preload-script>
+        const appendExecutableScript = (originalScript, parent) => {
+            const script = document.createElement('script');
+
+            for (const { name, value } of Array.from(originalScript.attributes)) {
+                script.setAttribute(name, value);
+            }
+            if (!script.src) {
+                script.textContent = originalScript.textContent || '';
+            }
+
+            script.async = false;
+            parent.appendChild(script);
+        };
+
+        const injectFetchedHtmlIntoDocument = (htmlText) => {
+            const parsedDocument = new DOMParser().parseFromString(htmlText, 'text/html');
+            const existingBase = document.querySelector('base');
+            if (existingBase) existingBase.remove();
+
+            for (const headNode of Array.from(parsedDocument.head.children)) {
+                if (headNode.tagName === 'SCRIPT') {
+                    appendExecutableScript(headNode, document.head);
+                    continue;
+                }
+                document.head.appendChild(headNode.cloneNode(true));
+            }
+
+            for (const bodyNode of Array.from(parsedDocument.body.children)) {
+                if (bodyNode.id === 'root' || bodyNode.id === 'modals') {
+                    const existing = document.getElementById(bodyNode.id);
+                    if (existing) existing.remove();
+
+                    document.body.appendChild(bodyNode.cloneNode(true));
+                    continue;
+                }
+
+                if (bodyNode.tagName === 'SCRIPT') {
+                    appendExecutableScript(bodyNode, document.body);
+                }
+            }
+        };
+
+        const buildIndexHtmlUrl = (config) => {
+            const base = config.cdnBaseUrl ? config.cdnBaseUrl.replace(/\/+$/, '') : '';
+            const htmlFile = config.htmlFile ?? 'index.html';
+            return `${base}/${config.version}/${htmlFile}`;
+        };
+
+        const fetchAndSwapIndexHtml = (htmlUrl) => {
+            fetch(htmlUrl)
+                .then(response => (response.ok ? response : Promise.reject(response)))
+                .then(response => response.text())
+                .then(htmlText => {
+                    injectFetchedHtmlIntoDocument(htmlText);
+                });
+        };
+
+        const runApp = (config) => {
+            const htmlUrl = buildIndexHtmlUrl(config);
+            fetchAndSwapIndexHtml(htmlUrl);
+        };
+
+        runApp({
+            version: "%VITE_APP_VERSION%",
+            cdnBaseUrl: "%VITE_CDN_BASE_URL%",
+            htmlFile: "index.html"
+        });
+    </script>
+</body>
+
+</html>

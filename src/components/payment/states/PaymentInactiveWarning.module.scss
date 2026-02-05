@@ -1,0 +1,43 @@
+.content {
+    text-align: center;
+}
+
+.timer {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    font-family: var(--font-family);
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 32px;
+    letter-spacing: -0.28px;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum';
+    margin-top: 20px;
+    margin-bottom: 24px;
+
+    span {
+        display: inline-flex;
+    }
+}
+
+.title {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: -0.28px;
+    margin-bottom: 8px;
+}
+
+.text {
+    color: var(--text-secondary-color);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: -0.28px;
+}
+
+.button {
+    width: 100%;
+    margin-top: 16px;
+}

@@ -1,0 +1,63 @@
+.header {
+    z-index: 999;
+    width: 100%;
+    height: calc(env(safe-area-inset-top, 0px) + 44px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding-top: env(safe-area-inset-top, 0);
+    background-color: var(--color-header);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+.content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding-left: var(--gap-16);
+    padding-right: var(--gap-16);
+}
+
+.content {
+    width: 418px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (max-width: 800px) {
+    .content {
+        width: 100%;
+    }
+}
+
+.logo {
+    display: flex;
+    align-items: center
+}
+
+.logoImage {
+    color: #FFFFFF;
+    overflow: hidden;
+}
+
+.rightButtons {
+    display: flex;
+    align-items: center;
+}
+
+.closeButton {
+    display: flex;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--color-background-neutral);
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}

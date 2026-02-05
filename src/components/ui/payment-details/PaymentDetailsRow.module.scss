@@ -1,0 +1,30 @@
+.detail {
+    display: flex;
+    font-family: var(--font-family);
+
+    &+.detail {
+        margin-top: 18px;
+    }
+}
+
+.label {
+    margin-right: 1.6%;
+    flex-basis: 38%;
+    min-width: 38%;
+    color: var(--text-secondary-color);
+}
+
+.content {
+    color: var(--text-primary-color);
+    word-break: break-word;
+}
+
+.link {
+    color: var(--link-primary-color);
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    text-decoration: underline;
+    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
+}

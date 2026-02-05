@@ -1,0 +1,46 @@
+.button {
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    padding: 16px;
+    border-radius: var(--radius);
+    -webkit-appearance: none;
+    appearance: none;
+    background: none;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+    font-size: inherit;
+    isolation: isolate;
+    line-height: inherit;
+    overflow: hidden;
+    position: relative;
+    text-decoration: none;
+    transition: transform 0.15s;
+    cursor: pointer;
+
+    &:active {
+        transform: scale(0.95);
+    }
+}
+
+.title {
+    word-wrap: break-word;
+    hyphens: auto;
+    text-overflow: ellipsis;
+}
+
+.title {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: -0.28px;
+    padding: 0 2px;
+}
+
+.content {
+    display: flex;
+}

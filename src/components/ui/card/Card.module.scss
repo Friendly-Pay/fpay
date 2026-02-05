@@ -1,0 +1,22 @@
+.card {
+    -webkit-appearance: none;
+    appearance: none;
+    padding: 0;
+    border: 0;
+    background: none;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    flex-shrink: 0;
+    text-decoration: none;
+    overscroll-behavior: contain;
+    overflow: hidden;
+    background: var(--color-background-neutral);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-sizing: border-box;
+}

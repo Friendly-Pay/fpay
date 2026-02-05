@@ -1,0 +1,26 @@
+.rate {
+    display: flex;
+    justify-content: flex-end;
+    min-width: 77px;
+    height: 18px;
+}
+
+.loader {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+        width: 18px;
+        height: 18px;
+        color: var(--color-primary);
+    }
+}
+
+.amount {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+    letter-spacing: -0.28px;
+}

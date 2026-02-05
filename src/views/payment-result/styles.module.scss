@@ -1,0 +1,55 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-sizing: border-box;
+    overflow: hidden;
+    inline-size: 100%;
+    block-size: calc(100% - 44px);
+    padding: 16px;
+}
+
+.icon {
+    display: flex;
+    margin-bottom: 44px;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.label {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    color: var(--text-secondary-color);
+    letter-spacing: -0.28px;
+    margin-bottom: 4px;
+}
+
+.paymentAmount {
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: -0.28px;
+}
+
+.orderAmount {
+    color: var(--text-secondary-color);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: -0.28px;
+    margin-top: 4px;
+}
+
+.bold {
+    font-weight: 700;
+}
+
+.regualar {
+    font-weight: 400;
+}
