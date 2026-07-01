@@ -19,12 +19,14 @@ export interface Shop {
 
 export interface SbpTransactionResponse {
     orderId: number;
-    type: 'sbp',
+    type: 'sbp';
     publicId: string;
     status: TransactionStatus;
     /** Через сколько транзакция перейдет в статус EXPIRED */
     expireIn: number;
     qrLink: string | null;
+    /** Описание заказа, заданное мерчантом при создании платежа */
+    description: string | null;
     orderAmount: {
         value: number;
         currency: string;
@@ -39,8 +41,12 @@ export interface SbpTransactionResponse {
 /**
  * Получения информации о СБП транзакции
  */
-export const requestSbpTransaction = async (transactionId: string): Promise<SbpTransactionResponse> => {
-    const response = await apiClient.get<SbpTransactionResponse>(`/transactions/sbp/${transactionId}`);
+export const requestSbpTransaction = async (
+    transactionId: string
+): Promise<SbpTransactionResponse> => {
+    const response = await apiClient.get<SbpTransactionResponse>(
+        `/transactions/sbp/${transactionId}`
+    );
     return response.data;
 
     // await new Promise(resolve => setTimeout(resolve, 500));

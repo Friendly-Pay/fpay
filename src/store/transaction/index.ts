@@ -19,6 +19,8 @@ export interface TransactionState {
     status: TransactionStatus;
     expireIn: number;
     qrLink: string | null;
+    /** Описание заказа, заданное мерчантом при создании платежа */
+    description: string | null;
     orderAmount: Amount;
     paymentAmount: Amount;
     shop: Shop;
@@ -64,6 +66,7 @@ const initialState: TransactionState = {
     status: TransactionStatus.INITIALIZED,
     expireIn: 0,
     qrLink: '',
+    description: null,
     orderAmount: {
         value: 0,
         currency: ''
@@ -84,7 +87,7 @@ const initialState: TransactionState = {
     error: null,
     expireInReceivedAt: 0,
     remainingTimeMs: 0,
-    inactiveWarningShow: false,
+    inactiveWarningShow: false
     // buttonLoading: false,
     // interactionLoading: false
 } as const;
@@ -129,72 +132,78 @@ const initialState: TransactionState = {
 //     inactiveWarningShow: false
 // };
 
-export const useTransactionStore = create<TransactionState & Actions>((set, get) => ({
-    ...initialState,
+export const useTransactionStore = create<TransactionState & Actions>(
+    (set, get) => ({
+        ...initialState,
 
-    loadOrder: async (transactionId: string) => {
-        if (get().orderFetchStatus === FetchStatus.Pending) {
-            return;
-        }
+        loadOrder: async (transactionId: string) => {
+            if (get().orderFetchStatus === FetchStatus.Pending) {
+                return;
+            }
 
-        set({
-            orderFetchStatus: FetchStatus.Pending,
-            error: null
-        });
-
-        try {
-            const data = await requestSbpTransaction(transactionId);
             set({
-                transactionId,
-                orderId: data.orderId,
-                status: data.status as TransactionStatus,
-                expireIn: data.expireIn,
-                qrLink: data.qrLink,
-                orderAmount: data.orderAmount,
-                paymentAmount: data.paymentAmount,
-                shop: data.shop,
-                expireInReceivedAt: performance.now(),
-                orderFetchStatus: FetchStatus.Fulfilled,
+                orderFetchStatus: FetchStatus.Pending,
                 error: null
             });
-        } catch (error: any) {
-            console.error('Ошибка при загрузке информации о транзакции:', error);
-            const errorCode = parseRequestError(error);
-            set({
-                orderFetchStatus: FetchStatus.Rejected,
-                error: errorCode
-            });
+
+            try {
+                const data = await requestSbpTransaction(transactionId);
+                set({
+                    transactionId,
+                    orderId: data.orderId,
+                    status: data.status as TransactionStatus,
+                    expireIn: data.expireIn,
+                    qrLink: data.qrLink,
+                    description: data.description,
+                    orderAmount: data.orderAmount,
+                    paymentAmount: data.paymentAmount,
+                    shop: data.shop,
+                    expireInReceivedAt: performance.now(),
+                    orderFetchStatus: FetchStatus.Fulfilled,
+                    error: null
+                });
+            } catch (error: any) {
+                console.error(
+                    'Ошибка при загрузке информации о транзакции:',
+                    error
+                );
+                const errorCode = parseRequestError(error);
+                set({
+                    orderFetchStatus: FetchStatus.Rejected,
+                    error: errorCode
+                });
+            }
+        },
+
+        resetOrder: () => {
+            set(initialState);
+        },
+
+        updateStatus: (status: TransactionStatus) => {
+            set({ status });
+        },
+
+        updateRemainingTimeMs: ms => {
+            set({ remainingTimeMs: ms });
+        },
+
+        updateInactiveWarning: show => {
+            set({ inactiveWarningShow: show });
+        },
+
+        // updateButtonLoading: (button) => {
+        //     set({ buttonLoading: button });
+        // },
+
+        // updateInteractionLoading: (loading) => {
+        //     set({ interactionLoading: loading });
+        // },
+
+        clearError: () => {
+            set({ error: null });
         }
-    },
-
-    resetOrder: () => {
-        set(initialState);
-    },
-
-    updateStatus: (status: TransactionStatus) => {
-        set({ status });
-    },
-
-    updateRemainingTimeMs: (ms) => {
-        set({ remainingTimeMs: ms });
-    },
-
-    updateInactiveWarning: (show) => {
-        set({ inactiveWarningShow: show });
-    },
-
-    // updateButtonLoading: (button) => {
-    //     set({ buttonLoading: button });
-    // },
-
-    // updateInteractionLoading: (loading) => {
-    //     set({ interactionLoading: loading });
-    // },
-
-    clearError: () => {
-        set({ error: null });
-    }
-}));
+    })
+);
 
 if (import.meta.env.DEV) {
     // @ts-ignore

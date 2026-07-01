@@ -6,6 +6,7 @@ export const selectTransaction = (state: TransactionState) => ({
     status: state.status,
     expireIn: state.expireIn,
     qrLink: state.qrLink,
+    description: state.description,
     orderAmount: state.orderAmount,
     paymentAmount: state.paymentAmount,
     shop: state.shop
@@ -13,8 +14,10 @@ export const selectTransaction = (state: TransactionState) => ({
 
 export const selectIsTransactionActive = (state: TransactionState) => {
     const status = state.status;
-    return status === TransactionStatus.CREATED ||
-        status === TransactionStatus.INITIALIZED;
+    return (
+        status === TransactionStatus.CREATED ||
+        status === TransactionStatus.INITIALIZED
+    );
 };
 
 export const selectIsTransactionExpired = (state: TransactionState) => {

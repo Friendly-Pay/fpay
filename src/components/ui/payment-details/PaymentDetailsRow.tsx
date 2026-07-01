@@ -32,7 +32,11 @@ interface PaymentDetailsRowProps {
      * */
     className?: string;
     /**
-     * Индивидуальный контент вместо стандартного value/href 
+     * Раскладка label/value в столбик (label над value) вместо строки
+     * */
+    stacked?: boolean;
+    /**
+     * Индивидуальный контент вместо стандартного value/href
      * */
     children?: ReactNode;
 }
@@ -45,6 +49,7 @@ export const PaymentDetailsRow: React.FC<PaymentDetailsRowProps> = ({
     linkTarget = '_blank',
     linkRel = 'noreferrer noopener nofollow',
     className = '',
+    stacked = false,
     children
 }) => {
     // Если передан children, используем его как контент
@@ -66,14 +71,12 @@ export const PaymentDetailsRow: React.FC<PaymentDetailsRowProps> = ({
     );
 
     return (
-        <div className={cn(styles.detail, className)}>
-            <div className={styles.label}>
-                {label}
-            </div>
+        <div
+            className={cn(styles.detail, stacked && styles.stacked, className)}
+        >
+            <div className={styles.label}>{label}</div>
 
-            <div className={styles.content}>
-                {content}
-            </div>
+            <div className={styles.content}>{content}</div>
         </div>
     );
 };

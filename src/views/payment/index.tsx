@@ -11,7 +11,11 @@ import { RubleAtTheResort } from '@/components/ui/banner/PromoBanner';
 import { PaymentDetails } from '@/components/ui/payment-details';
 import { useTransactionStore } from '@/store/transaction';
 import { TransactionStatus } from '@/store/transaction/api';
-import { selectIsTransactionFailed, selectIsTransactionSuccess, selectTransaction } from '@/store/transaction/selectors';
+import {
+    selectIsTransactionFailed,
+    selectIsTransactionSuccess,
+    selectTransaction
+} from '@/store/transaction/selectors';
 import { useTranslation } from 'react-i18next';
 import styles from './styles.module.scss';
 
@@ -19,8 +23,12 @@ const PaymentView: React.FC = () => {
     const [t] = useTranslation();
     const transaction = useTransactionStore(selectTransaction);
     const error = useTransactionStore(state => state.error);
-    const showInactiveWarning = useTransactionStore(state => state.inactiveWarningShow);
-    const isTransactionSuccess = useTransactionStore(selectIsTransactionSuccess);
+    const showInactiveWarning = useTransactionStore(
+        state => state.inactiveWarningShow
+    );
+    const isTransactionSuccess = useTransactionStore(
+        selectIsTransactionSuccess
+    );
     const isTransactionFailed = useTransactionStore(selectIsTransactionFailed);
 
     const handleHideInactiveWarning = () => {
@@ -29,26 +37,26 @@ const PaymentView: React.FC = () => {
 
     const renderPaymentOptions = () => {
         if (transaction.status === TransactionStatus.EXPIRED) {
-            return (<PaymentExpired />);
+            return <PaymentExpired />;
         }
 
         if (showInactiveWarning) {
-            return (<PaymentInactiveWarning handleReturnToPay={handleHideInactiveWarning} />);
+            return (
+                <PaymentInactiveWarning
+                    handleReturnToPay={handleHideInactiveWarning}
+                />
+            );
         }
 
-        return (<PaymentOptions />);
+        return <PaymentOptions />;
     };
 
     // Ошибка загрузки
     if (error) {
         if (error === 'SERVER_ERROR') {
-            return (
-                <ServerErrorView />
-            );
+            return <ServerErrorView />;
         } else {
-            return (
-                <NotFoundView transactionNotFound={error === 'NOT_FOUND'} />
-            );
+            return <NotFoundView transactionNotFound={error === 'NOT_FOUND'} />;
         }
     }
 
@@ -60,6 +68,9 @@ const PaymentView: React.FC = () => {
                 paymentAmountCurrency={transaction.paymentAmount.currency}
                 orderAmount={transaction.orderAmount.value}
                 orderAmountCurrency={transaction.orderAmount.currency}
+                shopName={transaction.shop.name}
+                orderId={transaction.orderId}
+                description={transaction.description}
             />
         );
     }
@@ -97,17 +108,14 @@ const PaymentView: React.FC = () => {
                     />
                 </PaymentDetails.Table>
 
-                <div className={styles.main}>
-                    {renderPaymentOptions()}
-                </div>
+                <div className={styles.main}>{renderPaymentOptions()}</div>
 
                 <RubleAtTheResort
-                    href='https://friendlypay.io/pay'
-                    target='_blank'
-                    rel='noreferrer'
+                    href="https://friendlypay.io/pay"
+                    target="_blank"
+                    rel="noreferrer"
                     className={styles.banner}
                 />
-
             </PageContent>
         </>
     );
