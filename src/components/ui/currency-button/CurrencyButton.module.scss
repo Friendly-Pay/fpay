@@ -14,7 +14,7 @@
     align-items: stretch;
     border-radius: 18px;
     box-sizing: border-box;
-    color: var(--text-primary-color, #FFFFFF);
+    color: var(--text-primary-color, #ffffff);
     font-family: var(--font-family);
     display: flex;
     flex-direction: column;
@@ -25,18 +25,18 @@
     padding: 16px;
     position: relative;
     background-color: var(--color-background-neutral);
-    transition: transform .15s cubic-bezier(.17, 0, .63, 1);
+    transition: transform 0.15s cubic-bezier(0.17, 0, 0.63, 1);
     user-select: none;
 
     &::after {
         background: transparent;
         box-sizing: border-box;
-        content: "";
+        content: '';
         height: 100%;
         left: 0;
         position: absolute;
         top: 0;
-        transition: border-color 75ms cubic-bezier(.17, 0, .63, 1);
+        transition: border-color 75ms cubic-bezier(0.17, 0, 0.63, 1);
         width: 100%;
         border: 2px solid transparent;
         border-radius: 20px;
@@ -55,6 +55,17 @@
     height: 38px;
     background-color: var(--color-background-neutral-2);
     border-radius: 40px;
+}
+
+.iconCard {
+    align-items: center;
+    justify-content: center;
+    background-color: #0f754e;
+}
+
+.logo {
+    width: 33px;
+    height: 10px;
 }
 
 .content {

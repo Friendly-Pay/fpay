@@ -1,0 +1,33 @@
+{
+  "languages": {
+    "JavaScript": {
+      "language_servers": ["!biome", "typescript-language-server", "eslint"],
+      "formatter": { "language_server": { "name": "eslint" } },
+      "format_on_save": "on"
+    },
+    "JSX": {
+      "language_servers": ["!biome", "typescript-language-server", "eslint"],
+      "formatter": { "language_server": { "name": "eslint" } },
+      "format_on_save": "on"
+    },
+    "TypeScript": {
+      "language_servers": ["!biome", "typescript-language-server", "eslint"],
+      "formatter": { "language_server": { "name": "eslint" } },
+      "format_on_save": "on"
+    },
+    "TSX": {
+      "language_servers": ["!biome", "typescript-language-server", "eslint"],
+      "formatter": { "language_server": { "name": "eslint" } },
+      "format_on_save": "on"
+    }
+  },
+  "lsp": {
+    "eslint": {
+      "settings": {
+        "codeActionsOnSave": {
+          "source.fixAll.eslint": true
+        }
+      }
+    }
+  }
+}

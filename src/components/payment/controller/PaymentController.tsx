@@ -85,14 +85,12 @@ export const PaymentController: React.FC = () => {
             return;
         }
 
-        const pooling = new TransactionPooling(
-            async () => {
-                try {
-                    await useTransactionStore.getState().loadOrder(transactionId);
-                } catch { }
-            },
-            POLLING_INTERVAL_MS
-        );
+        const pooling = new TransactionPooling(async () => {
+            try {
+                const { loadOrder, type } = useTransactionStore.getState();
+                await loadOrder(transactionId, type);
+            } catch {}
+        }, POLLING_INTERVAL_MS);
 
         if (!transactionId || !isTransactionActive || !POLLING_INTERVAL_MS) {
             pooling.stop();

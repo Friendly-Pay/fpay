@@ -19,6 +19,10 @@ export const AppRoutes: React.FC = () => {
                         element={<PaymentView />}
                     />
                     <Route
+                        path={ROUTES.CARD_PAYMENT}
+                        element={<PaymentView />}
+                    />
+                    <Route
                         path="*"
                         element={<NotFoundView />}
                     />

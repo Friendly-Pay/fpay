@@ -1,5 +1,17 @@
-import { createSbpTransaction, CreateTransactionErrorCode, CreateTransactionErrorResponse, loadSbpTransactionRate } from './api';
+import {
+    createCardTransaction,
+    createSbpTransaction,
+    CreateTransactionErrorCode,
+    CreateTransactionErrorResponse,
+    loadSbpTransactionRate
+} from './api';
+import { TransactionType } from '@/store/transaction/api';
 import { create } from 'zustand';
+
+const createTransactionByType: Record<TransactionType, typeof createSbpTransaction> = {
+    [TransactionType.SBP]: createSbpTransaction,
+    [TransactionType.CARD]: createCardTransaction
+};
 
 export interface TransactionCreateState {
     minLimit: number | null;
@@ -9,8 +21,18 @@ export interface TransactionCreateState {
 }
 
 interface Actions {
-    createTransaction: (publicShopId: string, orderAmount: number, orderCurrency: string) => Promise<{ transactionId: string } | void>;
-    loadTransactionRate: (publicShopId: string, orderAmount: number, orderCurrency: string) => Promise<{ rate: number, currency: string }>
+    createTransaction: (
+        method: TransactionType,
+        publicShopId: string,
+        orderAmount: number,
+        orderCurrency: string,
+        description?: string
+    ) => Promise<{ transactionId: string } | void>;
+    loadTransactionRate: (
+        publicShopId: string,
+        orderAmount: number,
+        orderCurrency: string
+    ) => Promise<{ rate: number; currency: string }>;
     setLimits: (min: number, max: number) => void;
     setLoading: (loading: boolean) => void;
     setServerError: (error: CreateTransactionErrorCode) => void;
@@ -21,7 +43,7 @@ export const initialState: TransactionCreateState = {
     minLimit: null,
     maxLimit: null,
     serverErrorCode: '',
-    loading: false,
+    loading: false
 };
 
 export const useTransactionCreateStore = create<TransactionCreateState & Actions>((set, get) => ({
@@ -30,7 +52,7 @@ export const useTransactionCreateStore = create<TransactionCreateState & Actions
     /**
      * При успешном завершении запроса loading не будет сброшен
      */
-    createTransaction: async (publicShopId, orderAmount, orderCurrency) => {
+    createTransaction: async (method, publicShopId, orderAmount, orderCurrency, description) => {
         const { loading } = get();
 
         if (loading) {
@@ -41,15 +63,11 @@ export const useTransactionCreateStore = create<TransactionCreateState & Actions
             loading: true,
             serverErrorCode: '',
             minLimit: null,
-            maxLimit: null,
+            maxLimit: null
         });
 
         try {
-            const res = await createSbpTransaction(
-                publicShopId,
-                orderAmount,
-                orderCurrency
-            );
+            const res = await createTransactionByType[method](publicShopId, orderAmount, orderCurrency, description);
 
             return { transactionId: res.transactionId };
         } catch (err: CreateTransactionErrorResponse | any) {
@@ -92,7 +110,7 @@ export const useTransactionCreateStore = create<TransactionCreateState & Actions
     setLimits: (min: number, max: number) => {
         set({
             minLimit: min,
-            maxLimit: max,
+            maxLimit: max
         });
     },
 
@@ -106,7 +124,7 @@ export const useTransactionCreateStore = create<TransactionCreateState & Actions
 
     reset: () => {
         set(initialState);
-    },
+    }
 }));
 
 if (import.meta.env.DEV) {

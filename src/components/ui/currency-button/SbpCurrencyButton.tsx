@@ -1,39 +1,23 @@
+import { CurrencyButton } from './CurrencyButton';
 import { useTranslation } from 'react-i18next';
-import cn from 'classnames';
-import styles from './CurrencyButton.module.scss';
 
-interface CurrencyButtonProps {
-    active?: boolean
-    className?: string
-    onClick?: () => void
+interface SbpCurrencyButtonProps {
+    active?: boolean;
+    className?: string;
+    onClick?: () => void;
 }
 
-// @TODO сделать чтобы принимал разные валюты
-export const SbpCurrencyButton: React.FC<CurrencyButtonProps> = ({ className, active, onClick }) => {
+export const SbpCurrencyButton: React.FC<SbpCurrencyButtonProps> = ({ className, active, onClick }) => {
     const [t] = useTranslation();
     return (
-        <button
-            className={cn(styles.button, active && styles.active, className)}
+        <CurrencyButton
+            icon={<Sbp />}
+            title={t('Rubles')}
+            text={t('Use SBP')}
+            active={active}
+            className={className}
             onClick={onClick}
-        >
-            <div className={styles.icon}>
-                <Sbp />
-            </div>
-
-            <div className={styles.content}>
-                <div
-                    className={styles.title}
-                >
-                    {t('Rubles')}
-                </div>
-
-                <div
-                    className={styles.text}
-                >
-                    {t('Use SBP')}
-                </div>
-            </div>
-        </button>
+        />
     );
 };
 

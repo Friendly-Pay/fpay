@@ -4,14 +4,19 @@ import ServerErrorView from '../server-error';
 import { PageContent } from '@/components/layout/PageContent';
 import { PaymentController } from '@/components/payment/controller/PaymentController';
 import { PaymentHeader } from '@/components/payment/PaymentHeader';
+import { CardPaymentOptions } from '@/components/payment/states/CardPaymentOptions';
 import { PaymentExpired } from '@/components/payment/states/PaymentExpired';
 import { PaymentInactiveWarning } from '@/components/payment/states/PaymentInactiveWarning.tsx';
 import { PaymentOptions } from '@/components/payment/states/PaymentOptions';
 import { RubleAtTheResort } from '@/components/ui/banner/PromoBanner';
 import { PaymentDetails } from '@/components/ui/payment-details';
 import { useTransactionStore } from '@/store/transaction';
-import { TransactionStatus } from '@/store/transaction/api';
-import { selectIsTransactionFailed, selectIsTransactionSuccess, selectTransaction } from '@/store/transaction/selectors';
+import { TransactionStatus, TransactionType } from '@/store/transaction/api';
+import {
+    selectIsTransactionFailed,
+    selectIsTransactionSuccess,
+    selectTransaction
+} from '@/store/transaction/selectors';
 import { useTranslation } from 'react-i18next';
 import styles from './styles.module.scss';
 
@@ -29,26 +34,26 @@ const PaymentView: React.FC = () => {
 
     const renderPaymentOptions = () => {
         if (transaction.status === TransactionStatus.EXPIRED) {
-            return (<PaymentExpired />);
+            return <PaymentExpired />;
         }
 
         if (showInactiveWarning) {
-            return (<PaymentInactiveWarning handleReturnToPay={handleHideInactiveWarning} />);
+            return <PaymentInactiveWarning handleReturnToPay={handleHideInactiveWarning} />;
         }
 
-        return (<PaymentOptions />);
+        if (transaction.type === TransactionType.CARD) {
+            return <CardPaymentOptions />;
+        }
+
+        return <PaymentOptions />;
     };
 
     // Ошибка загрузки
     if (error) {
         if (error === 'SERVER_ERROR') {
-            return (
-                <ServerErrorView />
-            );
+            return <ServerErrorView />;
         } else {
-            return (
-                <NotFoundView transactionNotFound={error === 'NOT_FOUND'} />
-            );
+            return <NotFoundView transactionNotFound={error === 'NOT_FOUND'} />;
         }
     }
 
@@ -60,9 +65,14 @@ const PaymentView: React.FC = () => {
                 paymentAmountCurrency={transaction.paymentAmount.currency}
                 orderAmount={transaction.orderAmount.value}
                 orderAmountCurrency={transaction.orderAmount.currency}
+                shopName={transaction.shop.name}
+                orderId={transaction.orderId}
+                description={transaction.description}
             />
         );
     }
+
+    const description = transaction.description ?? transaction.shop.description;
 
     return (
         <>
@@ -91,23 +101,22 @@ const PaymentView: React.FC = () => {
                         value={transaction.orderId}
                     />
 
-                    <PaymentDetails.Row
-                        label={t('Description')}
-                        value={transaction.shop.description}
-                    />
+                    {description && (
+                        <PaymentDetails.Row
+                            label={t('Description')}
+                            value={description}
+                        />
+                    )}
                 </PaymentDetails.Table>
 
-                <div className={styles.main}>
-                    {renderPaymentOptions()}
-                </div>
+                <div className={styles.main}>{renderPaymentOptions()}</div>
 
                 <RubleAtTheResort
-                    href='https://friendlypay.io/pay'
-                    target='_blank'
-                    rel='noreferrer'
+                    href="https://friendlypay.io/pay"
+                    target="_blank"
+                    rel="noreferrer"
                     className={styles.banner}
                 />
-
             </PageContent>
         </>
     );

@@ -7,10 +7,30 @@ export class TransactionActions {
     static client = new ClientEnvironment();
 
     static openNspk() {
-        const url = useTransactionStore.getState().qrLink;
-        if (url) {
-            window.location.href = url;
+        TransactionActions.navigateExternal(useTransactionStore.getState().qrLink);
+    }
+
+    static openBankPage() {
+        TransactionActions.navigateExternal(useTransactionStore.getState().formLink);
+    }
+
+    private static navigateExternal(link: string | null) {
+        if (!link) {
+            return;
         }
+
+        let url: URL;
+        try {
+            url = new URL(link);
+        } catch {
+            return;
+        }
+
+        if (url.protocol !== 'https:') {
+            return;
+        }
+
+        window.location.assign(url.href);
     }
 
     static async sharePaymentLink() {
@@ -25,7 +45,7 @@ export class TransactionActions {
             const shareData: ShareData = {
                 title: 'Friendly Pay | Платежная страница',
                 text: `Оплата заказа ${orderId}`,
-                url: shareUrl,
+                url: shareUrl
             };
 
             if ('share' in navigator) {

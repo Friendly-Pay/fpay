@@ -13,6 +13,8 @@ export const selectShopCurrency = (state: ShopState) => {
     return CURRENCY[state.currency as keyof typeof CURRENCY];
 };
 
+export const selectShopTransactionTypes = (state: ShopState) => state.supportedTransactionTypes;
+
 export const selectShopError = (state: ShopState) => {
     return state.error;
 };

@@ -1,0 +1,22 @@
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 100%;
+    block-size: 52px;
+    border: none;
+    border-radius: 14px;
+    background-color: #0f754e;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: default;
+        transform: none;
+    }
+}
+
+.logo {
+    block-size: 18px;
+}

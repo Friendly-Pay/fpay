@@ -1,9 +1,11 @@
+import { TransactionType } from '@/store/transaction/api';
 import { apiClient } from '@/utils/api';
 import { AxiosError } from 'axios';
 
 export enum CreateTransactionErrorCode {
     LIMIT_MIN_AMOUNT = 'LimitMinAmount',
-    LIMIT_MAX_AMOUNT = 'LimitMaxAmount'
+    LIMIT_MAX_AMOUNT = 'LimitMaxAmount',
+    DESCRIPTION_REQUIRED = 'DescriptionRequired'
 }
 
 interface CreateTransactionSuccessResponse {
@@ -11,7 +13,7 @@ interface CreateTransactionSuccessResponse {
 }
 
 export interface CreateTransactionErrorResponse {
-    errorCode: 'LimitMinAmount' | 'LimitMaxAmount';
+    errorCode: 'LimitMinAmount' | 'LimitMaxAmount' | 'DescriptionRequired';
     minAmount?: {
         value: number;
         currency: string;
@@ -22,18 +24,36 @@ export interface CreateTransactionErrorResponse {
     };
 }
 
-export const createSbpTransaction = async (publicShopId: string, orderAmount: number, orderCurrency: string) => {
+export const createSbpTransaction = (
+    publicShopId: string,
+    orderAmount: number,
+    orderCurrency: string,
+    description?: string
+) => createTransaction(TransactionType.SBP, publicShopId, orderAmount, orderCurrency, description);
+
+export const createCardTransaction = (
+    publicShopId: string,
+    orderAmount: number,
+    orderCurrency: string,
+    description?: string
+) => createTransaction(TransactionType.CARD, publicShopId, orderAmount, orderCurrency, description);
+
+const createTransaction = async (
+    method: TransactionType,
+    publicShopId: string,
+    orderAmount: number,
+    orderCurrency: string,
+    description?: string
+) => {
     try {
-        const response = await apiClient.post<CreateTransactionSuccessResponse>(
-            '/transactions/sbp',
-            {
-                shopId: publicShopId,
-                orderAmount: {
-                    value: orderAmount,
-                    currency: orderCurrency
-                }
-            }
-        );
+        const response = await apiClient.post<CreateTransactionSuccessResponse>(`/transactions/${method}`, {
+            shopId: publicShopId,
+            orderAmount: {
+                value: orderAmount,
+                currency: orderCurrency
+            },
+            ...(description ? { description } : {})
+        });
 
         return response.data;
     } catch (err) {
@@ -59,21 +79,14 @@ interface LoadPaymentRateResponse {
     };
 }
 
-export const loadSbpTransactionRate = async (
-    publicShopId: string,
-    orderAmount: number,
-    orderCurrency: string
-) => {
-    const response = await apiClient.post<LoadPaymentRateResponse>(
-        '/transactions/sbp/calculate',
-        {
-            shopId: publicShopId,
-            orderAmount: {
-                value: orderAmount,
-                currency: orderCurrency
-            }
+export const loadSbpTransactionRate = async (publicShopId: string, orderAmount: number, orderCurrency: string) => {
+    const response = await apiClient.post<LoadPaymentRateResponse>('/transactions/sbp/calculate', {
+        shopId: publicShopId,
+        orderAmount: {
+            value: orderAmount,
+            currency: orderCurrency
         }
-    );
+    });
 
     return response.data;
 };

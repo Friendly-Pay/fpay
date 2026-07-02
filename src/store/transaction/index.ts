@@ -1,6 +1,18 @@
-import { requestSbpTransaction, Shop, TransactionStatus } from './api';
+import {
+    requestCardTransaction,
+    requestSbpTransaction,
+    Shop,
+    TransactionResponse,
+    TransactionStatus,
+    TransactionType
+} from './api';
 import { FetchStatus, parseRequestError, RequestError } from '@/utils/api';
 import { create } from 'zustand';
+
+const requestTransactionByType: Record<TransactionType, (transactionId: string) => Promise<TransactionResponse>> = {
+    [TransactionType.SBP]: requestSbpTransaction,
+    [TransactionType.CARD]: requestCardTransaction
+};
 
 interface Amount {
     value: number;
@@ -16,9 +28,15 @@ export interface TransactionState {
      * Публичный ID
      */
     transactionId: string;
+    type: TransactionType;
     status: TransactionStatus;
+    /**
+     * Назначение платежа
+     */
+    description: string | null;
     expireIn: number;
     qrLink: string | null;
+    formLink: string | null;
     orderAmount: Amount;
     paymentAmount: Amount;
     shop: Shop;
@@ -35,35 +53,26 @@ export interface TransactionState {
      * Предупреждение, что скоро транзакция перейдет в статус EXPIRED
      * */
     inactiveWarningShow: boolean;
-
-    // /**
-    //  * Стейт загрузки для конкретной кнопки
-    //  */
-    // buttonLoading: 'SHARE' | false;
-
-    // /**
-    //  * Стейт загрузки при взаимодействии (над интерфейсом появляется overlay)
-    //  */
-    // interactionLoading: boolean;
 }
 
 interface Actions {
-    loadOrder: (transactionId: string) => Promise<void>;
+    loadOrder: (transactionId: string, type: TransactionType) => Promise<void>;
     resetOrder: () => void;
     updateStatus: (status: TransactionStatus) => void;
     updateRemainingTimeMs: (timeMs: number) => void;
     updateInactiveWarning: (show: boolean) => void;
-    // updateButtonLoading: (button: 'PAY_BANK' | 'SHARE' | 'QR' | false) => void;
-    // updateInteractionLoading: (loading: boolean) => void;
     clearError: () => void;
 }
 
 const initialState: TransactionState = {
     orderId: 0,
     transactionId: '',
+    type: TransactionType.SBP,
     status: TransactionStatus.INITIALIZED,
+    description: null,
     expireIn: 0,
-    qrLink: '',
+    qrLink: null,
+    formLink: null,
     orderAmount: {
         value: 0,
         currency: ''
@@ -84,55 +93,13 @@ const initialState: TransactionState = {
     error: null,
     expireInReceivedAt: 0,
     remainingTimeMs: 0,
-    inactiveWarningShow: false,
-    // buttonLoading: false,
-    // interactionLoading: false
+    inactiveWarningShow: false
 } as const;
-
-// export const initialState: TransactionState = {
-//     orderId: 123456,
-//     transactionId: 'abc123xyz789',
-//     status: TransactionStatus.INITIALIZED,
-
-//     // expireIn — в секундах, например 900 сек = 15 минут
-//     expireIn: 900,
-
-//     qrLink: 'https://qr.nspk.ru/AS10002F4G5H6I7J8K9L?type=01&bank=100000000',
-
-//     orderAmount: {
-//         value: 1000,
-//         currency: 'THB'
-//     },
-
-//     paymentAmount: {
-//         value: 1000,
-//         currency: 'RUB'
-//     },
-
-//     merchant: {
-//         id: 'merchant_001',
-//         name: 'Friendly Pay Store',
-//         description: 'Оплата заказа через Friendly Pay',
-//         siteUrl: 'https://friendly-pay.com'
-//     },
-
-//     orderFetchStatus: FetchStatus.Fulfilled,
-//     error: null,
-
-//     // Момент получения expireIn
-//     expireInReceivedAt: performance.now(),
-
-//     // Остаток времени — для примера просто сразу считаем
-//     remainingTimeMs: 0,
-
-//     // Показываем предупреждение?
-//     inactiveWarningShow: false
-// };
 
 export const useTransactionStore = create<TransactionState & Actions>((set, get) => ({
     ...initialState,
 
-    loadOrder: async (transactionId: string) => {
+    loadOrder: async (transactionId: string, type: TransactionType) => {
         if (get().orderFetchStatus === FetchStatus.Pending) {
             return;
         }
@@ -143,13 +110,17 @@ export const useTransactionStore = create<TransactionState & Actions>((set, get)
         });
 
         try {
-            const data = await requestSbpTransaction(transactionId);
+            const data = await requestTransactionByType[type](transactionId);
+
             set({
                 transactionId,
+                type: data.type,
                 orderId: data.orderId,
                 status: data.status as TransactionStatus,
+                description: data.description ?? null,
                 expireIn: data.expireIn,
-                qrLink: data.qrLink,
+                qrLink: data.type === TransactionType.SBP ? data.qrLink : null,
+                formLink: data.type === TransactionType.CARD ? data.formLink : null,
                 orderAmount: data.orderAmount,
                 paymentAmount: data.paymentAmount,
                 shop: data.shop,
@@ -175,21 +146,13 @@ export const useTransactionStore = create<TransactionState & Actions>((set, get)
         set({ status });
     },
 
-    updateRemainingTimeMs: (ms) => {
+    updateRemainingTimeMs: ms => {
         set({ remainingTimeMs: ms });
     },
 
-    updateInactiveWarning: (show) => {
+    updateInactiveWarning: show => {
         set({ inactiveWarningShow: show });
     },
-
-    // updateButtonLoading: (button) => {
-    //     set({ buttonLoading: button });
-    // },
-
-    // updateInteractionLoading: (loading) => {
-    //     set({ interactionLoading: loading });
-    // },
 
     clearError: () => {
         set({ error: null });

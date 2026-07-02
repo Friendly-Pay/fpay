@@ -1,3 +1,4 @@
+import { TransactionType } from '@/store/transaction/api';
 import { apiClient } from '@/utils/api';
 
 export interface ShopDetailsResponse {
@@ -6,7 +7,7 @@ export interface ShopDetailsResponse {
     description: string;
     currency?: string;
     language: string;
-    supportTransactionTypes: ('sbp' | 'crypto')[];
+    supportedTransactionTypes: TransactionType[];
 }
 
 /**

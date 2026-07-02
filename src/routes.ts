@@ -1,6 +1,7 @@
 const Routes = {
     CREATE_PAYMENT: '/shop/:name',
     SBP_PAYMENT: '/sbp/:transactionId',
+    CARD_PAYMENT: '/card/:transactionId',
 
     LOGIN: '/auth/login',
     SMS_VERIFICATION: '/auth/step',
@@ -12,6 +13,7 @@ const Routes = {
 const buildRoute = {
     createPayment: (name: string) => `/shop/${encodeURIComponent(name)}`,
     sbpPayment: (transactionId: string) => `/sbp/${encodeURIComponent(transactionId)}`,
+    cardPayment: (transactionId: string) => `/card/${encodeURIComponent(transactionId)}`,
     merchantShop: (shopId: number) => `${import.meta.env.VITE_DASHBOARD_DOMAIN}/merchant/dasboard/${shopId}`
 } as const;
 
@@ -28,6 +30,14 @@ const getCurrentRoute = (pathname: string) => {
         const transactionId = decodeURIComponent(pathname.split('/')[2] ?? '');
         return {
             route: Routes.SBP_PAYMENT,
+            transactionId
+        };
+    }
+
+    if (/^\/card\/[^/]+$/.test(pathname)) {
+        const transactionId = decodeURIComponent(pathname.split('/')[2] ?? '');
+        return {
+            route: Routes.CARD_PAYMENT,
             transactionId
         };
     }

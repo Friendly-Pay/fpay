@@ -12,9 +12,9 @@ interface PaymentHeaderProps {
     orderAmount: number;
     orderAmountCurrency: string;
 
-    /** 
+    /**
      * Сумма, которую пользователь реально платит:
-     * сейчас — RUB, далее появится крипта 
+     * сейчас — RUB, далее появится крипта
      */
     paymentAmount: number;
     paymentAmountCurrency: string;
@@ -22,48 +22,46 @@ interface PaymentHeaderProps {
     className?: string;
 }
 
-export const PaymentHeader = React.memo<PaymentHeaderProps>(({
-    title,
-    orderAmount,
-    orderAmountCurrency,
-    paymentAmount,
-    paymentAmountCurrency,
-    className
-}) => {
-    const orderCurrency = CURRENCY[orderAmountCurrency as keyof typeof CURRENCY];
-    const paymentCurrency = CURRENCY[paymentAmountCurrency as keyof typeof CURRENCY];
+export const PaymentHeader = React.memo<PaymentHeaderProps>(
+    ({ title, orderAmount, orderAmountCurrency, paymentAmount, paymentAmountCurrency, className }) => {
+        const orderCurrency = CURRENCY[orderAmountCurrency as keyof typeof CURRENCY];
+        const paymentCurrency = CURRENCY[paymentAmountCurrency as keyof typeof CURRENCY];
 
-    // Видна ли сумма заказа
-    const orderAmountVisible =
-        orderCurrency.code !== paymentCurrency.code;
+        // Видна ли сумма заказа
+        const orderAmountVisible = orderCurrency.code !== paymentCurrency.code;
 
-    return (
-        <div className={cn(styles.header, className)}>
-            <div className={styles.title}>{title}</div>
-            <div className={styles.paymentAmount}>
-                <FormattedAmount
-                    value={paymentAmount}
-                    currency={paymentAmountCurrency}
-                    minority={paymentCurrency.minorUnits}
-                    majorPartClassName={styles.bold}
-                />
-            </div>
-            {orderAmountVisible && (
-                <div className={styles.orderAmount}>
+        return (
+            <div className={cn(styles.header, className)}>
+                <div className={styles.title}>{title}</div>
+                <div className={styles.paymentAmount}>
                     <FormattedAmount
-                        value={orderAmount}
-                        currency={orderAmountCurrency}
-                        minority={orderCurrency.minorUnits}
-                        minorPartClassName={styles.regualar}
-                        majorPartClassName={styles.regualar}
-                        currencyClassName={styles.regualar}
-                        currencySeparatorClassName={styles.regualar}
-                        positiveSymbolClassName={styles.regular}
+                        value={paymentAmount}
+                        currency={paymentAmountCurrency}
+                        minority={paymentCurrency.minorUnits}
+                        minorPartClassName={styles.bold}
+                        majorPartClassName={styles.bold}
+                        currencyClassName={styles.bold}
+                        currencySeparatorClassName={styles.bold}
+                        positiveSymbolClassName={styles.bold}
                     />
                 </div>
-            )}
-        </div>
-    );
-});
+                {orderAmountVisible && (
+                    <div className={styles.orderAmount}>
+                        <FormattedAmount
+                            value={orderAmount}
+                            currency={orderAmountCurrency}
+                            minority={orderCurrency.minorUnits}
+                            minorPartClassName={styles.regualar}
+                            majorPartClassName={styles.regualar}
+                            currencyClassName={styles.regualar}
+                            currencySeparatorClassName={styles.regualar}
+                            positiveSymbolClassName={styles.regualar}
+                        />
+                    </div>
+                )}
+            </div>
+        );
+    }
+);
 
 PaymentHeader.displayName = 'PaymentHeader';

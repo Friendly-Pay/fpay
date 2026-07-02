@@ -1,17 +1,19 @@
 import NotFoundView from '../not-found';
 import { PageContent } from '@/components/layout/PageContent';
-import { SbpCurrencyButton } from '@/components/ui/currency-button/SbpCurrencyButton';
+import { CurrencyButton } from '@/components/ui/currency-button';
 import { MerchantHead } from '@/components/ui/merchant/MerchantHead';
 import { PaymentRate } from '@/components/ui/rate/PaymentRate';
 import { buildRoute } from '@/routes';
 import { useShopStore } from '@/store/shop';
-import { selectShop, selectShopCurrency, selectShopError } from '@/store/shop/selectors';
+import { selectShop, selectShopCurrency, selectShopError, selectShopTransactionTypes } from '@/store/shop/selectors';
+import { TransactionType } from '@/store/transaction/api';
 import { useTransactionCreateStore } from '@/store/transaction-create';
 import { CreateTransactionErrorCode } from '@/store/transaction-create/api';
 import { selectTransactionCreateServerError } from '@/store/transaction-create/selectors';
 import { fromMinorUnits, toMinorUnits } from '@/utils/math';
 import { AmountInput } from '@friendly-pay/uikit/AmountInput/AmountInput';
 import { Button } from '@friendly-pay/uikit/Button';
+import { DescriptionInput } from '@friendly-pay/uikit/DescriptionInput/DescriptionInput';
 import { formatAmount } from '@friendly-pay/utils';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -22,6 +24,7 @@ export const CreatePaymentView: React.FC = () => {
     const { t, i18n } = useTranslation();
     const shop = useShopStore(selectShop);
     const shopCurrency = useShopStore(selectShopCurrency);
+    const transactionTypes = useShopStore(selectShopTransactionTypes);
     const shopError = useShopStore(selectShopError);
 
     const loading = useTransactionCreateStore(state => state.loading);
@@ -29,12 +32,19 @@ export const CreatePaymentView: React.FC = () => {
     const maxLimit = useTransactionCreateStore(state => state.maxLimit);
     const serverError = useTransactionCreateStore(selectTransactionCreateServerError);
 
+    const [method, setMethod] = useState<TransactionType>(() => transactionTypes[0] ?? TransactionType.SBP);
     const [amountMinor, setAmountMinor] = useState<number | null>(null);
-    const [error, setError] = useState('');
+    const [amountError, setAmountError] = useState('');
+    const [description, setDescription] = useState('');
+    const [descriptionError, setDescriptionError] = useState('');
+
+    // @TODO добавить поддержку курса для карт
+    const showRate = method === TransactionType.SBP && shopCurrency.mnemonicCode !== 'RUB';
 
     useEffect(() => {
         if (!serverError) {
-            setError('');
+            setAmountError('');
+            setDescriptionError('');
             return;
         }
 
@@ -49,7 +59,7 @@ export const CreatePaymentView: React.FC = () => {
                         locale: i18n.language
                     }).formattedWithCurrency;
 
-                    setError(t('Minimum payment is {{amount}}', { amount }));
+                    setAmountError(t('Minimum payment is {{amount}}', { amount }));
                 }
                 break;
 
@@ -63,8 +73,12 @@ export const CreatePaymentView: React.FC = () => {
                         locale: i18n.language
                     }).formattedWithCurrency;
 
-                    setError(t('Maximum payment is {{amount}}', { amount }));
+                    setAmountError(t('Maximum payment is {{amount}}', { amount }));
                 }
+                break;
+
+            case CreateTransactionErrorCode.DESCRIPTION_REQUIRED:
+                setDescriptionError(t('Enter payment description'));
                 break;
 
             default:
@@ -72,42 +86,58 @@ export const CreatePaymentView: React.FC = () => {
         }
     }, [serverError, minLimit, maxLimit, shopCurrency]);
 
-    const handleAmountChange = (_e: ChangeEvent<HTMLInputElement> | null, payload: {
-        value: number | null;
-        valueString: string;
-    }) => {
+    const handleAmountChange = (
+        _e: ChangeEvent<HTMLInputElement> | null,
+        payload: {
+            value: number | null;
+            valueString: string;
+        }
+    ) => {
         setAmountMinor(payload.value ?? null);
-        if (error) {
-            setError('');
+        if (amountError) {
+            setAmountError('');
+        }
+    };
+
+    const handleDescriptionChange = (_e: ChangeEvent<HTMLInputElement>, payload: { value: string }) => {
+        setDescription(payload.value);
+        if (descriptionError) {
+            setDescriptionError('');
         }
     };
 
     const handleCreatePayment = async () => {
-        setError('');
+        setAmountError('');
 
         if (!amountMinor) {
-            setError(t('Enter payment amount'));
+            setAmountError(t('Enter payment amount'));
             return;
         }
 
         const orderAmount = fromMinorUnits(amountMinor, shopCurrency.minorUnits);
-        const order = await useTransactionCreateStore.getState().createTransaction(
-            shop.publicShopId,
-            orderAmount,
-            shopCurrency.mnemonicCode
-        );
+        const order = await useTransactionCreateStore
+            .getState()
+            .createTransaction(
+                method,
+                shop.publicShopId,
+                orderAmount,
+                shopCurrency.mnemonicCode,
+                description.trim() || undefined
+            );
 
         if (order) {
-            window.location.href = `${window.location.origin}${buildRoute.sbpPayment(order.transactionId)}`;
+            const route =
+                method === TransactionType.CARD
+                    ? buildRoute.cardPayment(order.transactionId)
+                    : buildRoute.sbpPayment(order.transactionId);
+            window.location.href = `${window.location.origin}${route}`;
         } else {
             useTransactionCreateStore.getState().setLoading(false);
         }
     };
 
     if (shopError) {
-        return (
-            <NotFoundView shopNotFound={shopError === 'NOT_FOUND'} />
-        );
+        return <NotFoundView shopNotFound={shopError === 'NOT_FOUND'} />;
     }
 
     return (
@@ -116,14 +146,12 @@ export const CreatePaymentView: React.FC = () => {
                 name={shop.name}
                 publicShopId={shop.publicShopId}
                 shopId={shop.shopId}
-                background='rgba(138,195,87,0.17)'
+                background="rgba(138,195,87,0.17)"
                 className={styles.merchant}
             />
 
             <div className={styles.content}>
-                <div className={styles.title}>
-                    {t('Create payment')}
-                </div>
+                <div className={styles.title}>{t('Create payment')}</div>
 
                 <div className={styles.paymentForm}>
                     <div className={styles.amount}>
@@ -131,33 +159,57 @@ export const CreatePaymentView: React.FC = () => {
                         <AmountInput
                             value={amountMinor}
                             currency={shopCurrency.mnemonicCode}
-                            codeFormat='letter'
-                            error={error}
+                            codeFormat="letter"
+                            error={amountError}
                             block
                             onChange={handleAmountChange}
                             className={cn(loading && styles.disabledInput)}
-                            autoComplete='off'
-                            autoCorrect='off'
-                            autoCapitalize='off'
+                            autoComplete="off"
+                            autoCorrect="off"
+                            autoCapitalize="off"
                             tabIndex={0}
                         />
 
-                        {shopCurrency.mnemonicCode !== 'RUB' && <PaymentRate
-                            shopId={shop.publicShopId}
-                            orderAmount={amountMinor ? fromMinorUnits(amountMinor, shopCurrency.minorUnits) : 0}
-                            orderCurrency={shopCurrency.mnemonicCode}
-                            className={styles.rate}
-                        />}
+                        {showRate && (
+                            <PaymentRate
+                                shopId={shop.publicShopId}
+                                orderAmount={amountMinor ? fromMinorUnits(amountMinor, shopCurrency.minorUnits) : 0}
+                                orderCurrency={shopCurrency.mnemonicCode}
+                                className={styles.rate}
+                            />
+                        )}
                     </div>
 
                     <div className={styles.currencies}>
-                        <SbpCurrencyButton active />
+                        {transactionTypes.includes(TransactionType.SBP) && (
+                            <CurrencyButton.Sbp
+                                active={method === TransactionType.SBP}
+                                onClick={() => setMethod(TransactionType.SBP)}
+                            />
+                        )}
+                        {transactionTypes.includes(TransactionType.CARD) && (
+                            <CurrencyButton.Card
+                                active={method === TransactionType.CARD}
+                                onClick={() => setMethod(TransactionType.CARD)}
+                            />
+                        )}
+                    </div>
+
+                    <div className={styles.description}>
+                        <DescriptionInput
+                            value={description}
+                            error={descriptionError}
+                            placeholder={t('Payment description')}
+                            block
+                            onChange={handleDescriptionChange}
+                        />
                     </div>
                 </div>
 
                 <Button
-                    size='58'
+                    size="58"
                     loading={loading}
+                    disabled={!transactionTypes.length}
                     onClick={handleCreatePayment}
                 >
                     {t('Pay now')}

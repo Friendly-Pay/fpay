@@ -1,5 +1,10 @@
 import { apiClient } from '@/utils/api';
 
+export enum TransactionType {
+    SBP = 'sbp',
+    CARD = 'card'
+}
+
 export enum TransactionStatus {
     CREATED = 'created',
     INITIALIZED = 'initialized',
@@ -17,14 +22,14 @@ export interface Shop {
     siteUrl: string;
 }
 
-export interface SbpTransactionResponse {
+interface BaseTransactionResponse {
     orderId: number;
-    type: 'sbp',
     publicId: string;
     status: TransactionStatus;
+    /** Назначение платежа (может отсутствовать) */
+    description?: string | null;
     /** Через сколько транзакция перейдет в статус EXPIRED */
     expireIn: number;
-    qrLink: string | null;
     orderAmount: {
         value: number;
         currency: string;
@@ -36,31 +41,30 @@ export interface SbpTransactionResponse {
     shop: Shop;
 }
 
+export interface SbpTransactionResponse extends BaseTransactionResponse {
+    type: TransactionType.SBP;
+    qrLink: string | null;
+}
+
+export interface CardTransactionResponse extends BaseTransactionResponse {
+    type: TransactionType.CARD;
+    formLink: string | null;
+}
+
+export type TransactionResponse = SbpTransactionResponse | CardTransactionResponse;
+
 /**
  * Получения информации о СБП транзакции
  */
 export const requestSbpTransaction = async (transactionId: string): Promise<SbpTransactionResponse> => {
     const response = await apiClient.get<SbpTransactionResponse>(`/transactions/sbp/${transactionId}`);
     return response.data;
+};
 
-    // await new Promise(resolve => setTimeout(resolve, 500));
-    // return {
-    //   orderId: 123456,
-    //   status: TransactionStatus.CREATED,
-    //   expireIn: 120,
-    //   qrLink: 'https://qr.example.com/path-to-qr',
-    //   orderAmount: {
-    //     value: 1000.50,
-    //     currency: 'RUB'
-    //   },
-    //   paymentAmount: {
-    //     value: 1000.50,
-    //     currency: 'RUB'
-    //   },
-    //   shop: {
-    //     id: 'merchant-001',
-    //     name: 'Test Merchant',
-    //     description: 'Test merchant description'
-    //   }
-    // };
+/**
+ * Получения информации о карточной транзакции
+ */
+export const requestCardTransaction = async (transactionId: string): Promise<CardTransactionResponse> => {
+    const response = await apiClient.get<CardTransactionResponse>(`/transactions/card/${transactionId}`);
+    return response.data;
 };

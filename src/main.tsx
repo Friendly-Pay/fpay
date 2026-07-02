@@ -5,6 +5,7 @@ import { initLocalization } from './localization';
 import { getCurrentRoute, Routes } from './routes';
 import { useShopStore } from './store/shop';
 import { useTransactionStore } from './store/transaction';
+import { TransactionType } from './store/transaction/api';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './main.css';
@@ -20,7 +21,11 @@ const runApp = async () => {
             break;
 
         case Routes.SBP_PAYMENT:
-            await useTransactionStore.getState().loadOrder(initialPath.transactionId);
+            await useTransactionStore.getState().loadOrder(initialPath.transactionId, TransactionType.SBP);
+            break;
+
+        case Routes.CARD_PAYMENT:
+            await useTransactionStore.getState().loadOrder(initialPath.transactionId, TransactionType.CARD);
             break;
     }
 

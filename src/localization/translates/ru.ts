@@ -1,15 +1,17 @@
 const translations = {
     'Pay for order': 'Оплатите заказ',
-    'Merchant': 'Магазин',
+    Merchant: 'Магазин',
     'Order #': 'Номер заказа',
-    'Description': 'Описание',
+    Description: 'Описание',
+    Details: 'Детали',
 
     'Scan<br/>QR code': 'Отсканировать<br/> QR-код',
     'Share<br/>link': 'Поделиться<br/> ссылкой',
     'In the<br/>bank app': 'В приложении<br/> банка',
 
     'Payment time is expiring': 'Истекает время оплаты',
-    'To complete the payment, you’ll need to enter the details again': 'Чтобы оплатить, нужно будет ввести данные снова',
+    'To complete the payment, you’ll need to enter the details again':
+        'Чтобы оплатить, нужно будет ввести данные снова',
     'Return to payment': 'Вернуться к оплате',
 
     'Payment time has expired': 'Время оплаты истекло',
@@ -23,9 +25,16 @@ const translations = {
 
     '#': '№',
     'Merchant #': 'Магазин №',
-    'Rubles': 'В рублях',
+    Rubles: 'В рублях',
     'Use SBP': 'Через СБП',
-    'Rate': 'Курс',
+    'By card': 'Картой',
+    MIR: 'МИР',
+    'Payment description': 'Назначение платежа',
+    'Enter payment description': 'Укажите назначение платежа',
+    'By bank card': 'Банковской картой',
+    'Paying by MIR card, you will be redirected to the bank page':
+        'Оплачивая картой MIR, вы будете перенаправлены на страницу банка',
+    Rate: 'Курс',
 
     'Minimum payment is {{amount}}': 'Нельзя создать платеж меньше {{amount}}',
     'Maximum payment is {{amount}}': 'Нельзя создать платеж больше {{amount}}',
@@ -40,7 +49,7 @@ const translations = {
     'Sign in to Friendly Pay': 'Войдите в Friendly Pay',
     'Phone number': 'Телефон',
     'Enter your phone number': 'Введите телефон',
-    'Continue': 'Вперед',
+    Continue: 'Вперед',
 
     'Enter verification code': 'Введите код',
     'Sent via Telegram': 'Отправили вам в Telegram',
@@ -52,19 +61,19 @@ const translations = {
     'No code received?': 'Не получили код?',
     'Request new in': 'Вы сможете запросить новый через',
 
-    'Available': 'Доступно',
-    'Withdraw': 'Вывести средства',
-    'Transactions': 'Все операции',
+    Available: 'Доступно',
+    Withdraw: 'Вывести средства',
+    Transactions: 'Все операции',
     'No transactions yet': 'Нет операций',
-    'paid': 'оплатили',
+    paid: 'оплатили',
+    'not paid': 'операция не прошла',
 
-    'Pending': 'В ожидании',
-    'Paid': 'Оплачен',
-    'Expired': 'Истек',
-    'Failed': 'Не удался',
-    'Today': 'Сегодня',
-    'Yesterday': 'Вчера',
-
+    Pending: 'В ожидании',
+    Paid: 'Оплачен',
+    Expired: 'Истек',
+    Failed: 'Не удался',
+    Today: 'Сегодня',
+    Yesterday: 'Вчера'
 } as const;
 
 export default translations;
